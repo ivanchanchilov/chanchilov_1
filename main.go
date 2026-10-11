@@ -1,30 +1,17 @@
 package main
 
 import (
-	"fmt"
+	"expenses/internal/handlers"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/", mainPage)
-	http.HandleFunc("/about", aboutPage)
-	http.HandleFunc("/ping", pingPage)
+	http.HandleFunc("/", handlers.MainPage)
+	http.HandleFunc("/about", handlers.AboutPage)
+	http.HandleFunc("/ping", handlers.PingPage)
+	http.HandleFunc("/expenses", handlers.ExpensesPage)
+	http.HandleFunc("/expenses/add", handlers.AddExpensePage)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
 	http.ListenAndServe(":8080", nil)
-}
-
-func mainPage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "123123")
-}
-
-func aboutPage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "321321321")
-}
-
-func pingPage(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "GET" {
-		fmt.Fprintln(w, "pong")
-		return
-	}
-	http.Error(w, "Method now allowed", 405)
 }

@@ -1,0 +1,21 @@
+{{define "content"}}
+<h2>Список трат</h2>
+{{if .}}
+<table>
+    <tr>
+        <th>Сумма</th>
+        <th>Описание</th>
+        <th>Дата</th>
+    </tr>
+    {{range .}}
+    <tr>
+        <td>{{.Amount}}</td>
+        <td>{{.Description}}</td>
+        <td>{{.Date}}</td>
+    </tr>
+    {{end}}
+</table>
+{{else}}
+<p>Трат пока нет.</p>
+{{end}}
+{{end}}
