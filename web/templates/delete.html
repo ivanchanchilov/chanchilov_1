@@ -1,0 +1,8 @@
+{{define "content"}}
+<h2>Удалить трату</h2>
+<p>Удалить трату «{{.Description}}» на сумму {{.Amount}} за {{.Date}}?</p>
+<form method="POST" action="/expenses/delete?id={{.ID}}">
+    <button type="submit">Да, удалить</button>
+</form>
+<a href="/expenses">Отмена</a>
+{{end}}

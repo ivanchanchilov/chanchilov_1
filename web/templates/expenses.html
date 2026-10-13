@@ -6,12 +6,17 @@
         <th>Сумма</th>
         <th>Описание</th>
         <th>Дата</th>
+        <th>Действия</th>
     </tr>
     {{range .}}
     <tr>
         <td>{{.Amount}}</td>
         <td>{{.Description}}</td>
         <td>{{.Date}}</td>
+        <td>
+            <a href="/expenses/edit?id={{.ID}}">Редактировать</a>
+            <a href="/expenses/delete?id={{.ID}}">Удалить</a>
+        </td>
     </tr>
     {{end}}
 </table>

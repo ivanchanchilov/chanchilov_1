@@ -1,0 +1,4 @@
+expenses.db
+expenses.db-journal
+expenses.db-wal
+expenses.db-shm
