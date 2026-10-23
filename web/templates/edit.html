@@ -1,14 +1,21 @@
 {{define "content"}}
 <h2>Редактировать трату</h2>
-<form method="POST" action="/expenses/edit?id={{.ID}}">
+<form method="POST" action="/expenses/edit?id={{.Expense.ID}}">
     <label for="amount">Сумма</label>
-    <input id="amount" type="number" name="amount" step="0.01" min="0.01" value="{{.Amount}}" required>
+    <input id="amount" type="number" name="amount" step="0.01" min="0.01" value="{{.Expense.Amount}}" required>
 
     <label for="description">Описание</label>
-    <input id="description" type="text" name="description" value="{{.Description}}" required>
+    <input id="description" type="text" name="description" value="{{.Expense.Description}}" required>
 
     <label for="date">Дата</label>
-    <input id="date" type="date" name="date" value="{{.Date}}" required>
+    <input id="date" type="date" name="date" value="{{.Expense.Date}}" required>
+
+    <label for="category">Категория</label>
+    <select id="category" name="category" required>
+        {{range .Categories}}
+        <option value="{{.ID}}" {{if eq .ID $.Expense.CategoryID}}selected{{end}}>{{.Name}}</option>
+        {{end}}
+    </select>
 
     <button type="submit">Сохранить</button>
 </form>

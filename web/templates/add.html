@@ -10,6 +10,13 @@
     <label for="date">Дата</label>
     <input id="date" type="date" name="date" required>
 
+    <label for="category">Категория</label>
+    <select id="category" name="category" required>
+        {{range .Categories}}
+        <option value="{{.ID}}">{{.Name}}</option>
+        {{end}}
+    </select>
+
     <button type="submit">Добавить</button>
 </form>
 {{end}}

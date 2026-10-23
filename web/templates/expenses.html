@@ -1,18 +1,35 @@
 {{define "content"}}
 <h2>Список трат</h2>
-{{if .}}
+<form method="GET" action="/expenses">
+    <label for="category">Категория</label>
+    <select id="category" name="category">
+        <option value="">Все категории</option>
+        {{range .Categories}}
+        <option value="{{.ID}}" {{if eq .ID $.CategoryID}}selected{{end}}>{{.Name}}</option>
+        {{end}}
+    </select>
+    <label for="from">От</label>
+    <input id="from" type="date" name="from" value="{{.From}}">
+    <label for="to">До</label>
+    <input id="to" type="date" name="to" value="{{.To}}">
+    <button type="submit">Показать</button>
+    <a href="/expenses">Сбросить фильтры</a>
+</form>
+{{if .Expenses}}
 <table>
     <tr>
         <th>Сумма</th>
         <th>Описание</th>
         <th>Дата</th>
+        <th>Категория</th>
         <th>Действия</th>
     </tr>
-    {{range .}}
+    {{range .Expenses}}
     <tr>
         <td>{{.Amount}}</td>
         <td>{{.Description}}</td>
         <td>{{.Date}}</td>
+        <td>{{.CategoryName}}</td>
         <td>
             <a href="/expenses/edit?id={{.ID}}">Редактировать</a>
             <a href="/expenses/delete?id={{.ID}}">Удалить</a>
@@ -21,6 +38,6 @@
     {{end}}
 </table>
 {{else}}
-<p>Трат пока нет.</p>
+<p>Траты не найдены.</p>
 {{end}}
 {{end}}

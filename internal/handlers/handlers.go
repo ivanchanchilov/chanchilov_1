@@ -46,7 +46,19 @@ func ExpensesPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expenses, err := Repo.GetAll()
+	categoryID := 0
+	var err error
+	category := r.URL.Query().Get("category")
+	if category != "" {
+		categoryID, err = strconv.Atoi(category)
+		if err != nil {
+			http.Error(w, "Неверная категория", 400)
+			return
+		}
+	}
+	from := r.URL.Query().Get("from")
+	to := r.URL.Query().Get("to")
+	expenses, err := Repo.GetAll(categoryID, from, to)
 	if err != nil {
 		http.Error(w, "Ошибка базы данных", 500)
 		return
@@ -58,7 +70,19 @@ func ExpensesPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t.ExecuteTemplate(w, "layout", expenses)
+	categories, err := Repo.GetCategories()
+	if err != nil {
+		http.Error(w, "Ошибка базы данных", 500)
+		return
+	}
+	data := models.PageData{
+		Expenses:   expenses,
+		Categories: categories,
+		CategoryID: categoryID,
+		From:       from,
+		To:         to,
+	}
+	t.ExecuteTemplate(w, "layout", data)
 }
 
 func AddExpensePage(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +93,13 @@ func AddExpensePage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		t.ExecuteTemplate(w, "layout", nil)
+		categories, err := Repo.GetCategories()
+		if err != nil {
+			http.Error(w, "Ошибка базы данных", 500)
+			return
+		}
+		data := models.PageData{Categories: categories}
+		t.ExecuteTemplate(w, "layout", data)
 		return
 	}
 
@@ -86,7 +116,14 @@ func AddExpensePage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		categoryID, err := strconv.Atoi(r.FormValue("category"))
+		if err != nil {
+			http.Error(w, "Неверная категория", 400)
+			return
+		}
+
 		expense := models.Expense{
+			CategoryID:  categoryID,
 			Amount:      amount,
 			Description: r.FormValue("description"),
 			Date:        r.FormValue("date"),
@@ -132,7 +169,13 @@ func EditExpensePage(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Ошибка шаблона", 500)
 			return
 		}
-		t.ExecuteTemplate(w, "layout", expense)
+		categories, err := Repo.GetCategories()
+		if err != nil {
+			http.Error(w, "Ошибка базы данных", 500)
+			return
+		}
+		data := models.PageData{Expense: expense, Categories: categories}
+		t.ExecuteTemplate(w, "layout", data)
 		return
 	}
 
@@ -148,6 +191,12 @@ func EditExpensePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	categoryID, err := strconv.Atoi(r.FormValue("category"))
+	if err != nil {
+		http.Error(w, "Неверная категория", 400)
+		return
+	}
+	expense.CategoryID = categoryID
 	expense.Amount = amount
 	expense.Description = r.FormValue("description")
 	expense.Date = r.FormValue("date")

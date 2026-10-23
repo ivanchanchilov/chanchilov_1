@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("sqlite", "expenses.db")
+	db, err := sql.Open("sqlite", "expenses.db?_pragma=foreign_keys(1)")
 	if err != nil {
 		fmt.Println(err)
 		return
