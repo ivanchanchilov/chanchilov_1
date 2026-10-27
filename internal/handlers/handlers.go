@@ -58,7 +58,7 @@ func ExpensesPage(w http.ResponseWriter, r *http.Request) {
 	}
 	from := r.URL.Query().Get("from")
 	to := r.URL.Query().Get("to")
-	expenses, err := Repo.GetAll(categoryID, from, to)
+	expenses, err := Repo.GetAll(r.Context().Value(userIDKey).(int), categoryID, from, to)
 	if err != nil {
 		http.Error(w, "Ошибка базы данных", 500)
 		return
@@ -123,6 +123,7 @@ func AddExpensePage(w http.ResponseWriter, r *http.Request) {
 		}
 
 		expense := models.Expense{
+			UserID:      r.Context().Value(userIDKey).(int),
 			CategoryID:  categoryID,
 			Amount:      amount,
 			Description: r.FormValue("description"),
@@ -153,7 +154,7 @@ func EditExpensePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expense, err := Repo.GetByID(id)
+	expense, err := Repo.GetByID(id, r.Context().Value(userIDKey).(int))
 	if err == sql.ErrNoRows {
 		http.NotFound(w, r)
 		return
@@ -196,6 +197,7 @@ func EditExpensePage(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Неверная категория", 400)
 		return
 	}
+	expense.UserID = r.Context().Value(userIDKey).(int)
 	expense.CategoryID = categoryID
 	expense.Amount = amount
 	expense.Description = r.FormValue("description")
@@ -221,7 +223,7 @@ func DeleteExpensePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	expense, err := Repo.GetByID(id)
+	expense, err := Repo.GetByID(id, r.Context().Value(userIDKey).(int))
 	if err == sql.ErrNoRows {
 		http.NotFound(w, r)
 		return
@@ -241,7 +243,7 @@ func DeleteExpensePage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = Repo.Delete(id)
+	err = Repo.Delete(id, r.Context().Value(userIDKey).(int))
 	if err != nil {
 		http.Error(w, "Ошибка базы данных", 500)
 		return

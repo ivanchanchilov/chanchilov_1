@@ -25,13 +25,16 @@ func main() {
 	}
 	handlers.Repo = repo
 
-	http.HandleFunc("/", handlers.MainPage)
+	http.HandleFunc("/", handlers.Auth(handlers.MainPage))
+	http.HandleFunc("/register", handlers.RegisterPage)
+	http.HandleFunc("/login", handlers.LoginPage)
+	http.HandleFunc("/logout", handlers.Auth(handlers.LogoutPage))
 	http.HandleFunc("/about", handlers.AboutPage)
 	http.HandleFunc("/ping", handlers.PingPage)
-	http.HandleFunc("/expenses", handlers.ExpensesPage)
-	http.HandleFunc("/expenses/add", handlers.AddExpensePage)
-	http.HandleFunc("/expenses/edit", handlers.EditExpensePage)
-	http.HandleFunc("/expenses/delete", handlers.DeleteExpensePage)
+	http.HandleFunc("/expenses", handlers.Auth(handlers.ExpensesPage))
+	http.HandleFunc("/expenses/add", handlers.Auth(handlers.AddExpensePage))
+	http.HandleFunc("/expenses/edit", handlers.Auth(handlers.EditExpensePage))
+	http.HandleFunc("/expenses/delete", handlers.Auth(handlers.DeleteExpensePage))
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
 	http.ListenAndServe(":8080", nil)

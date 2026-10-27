@@ -10,8 +10,10 @@ require (
 	github.com/mattn/go-isatty v0.0.24
 	github.com/ncruces/go-strftime v1.0.0
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec
-	golang.org/x/sys v0.48.0
+	golang.org/x/sys v0.49.0
 	modernc.org/libc v1.77.1
 	modernc.org/mathutil v1.7.1
 	modernc.org/memory v1.12.1
 )
+
+require golang.org/x/crypto v0.58.0
