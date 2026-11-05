@@ -35,6 +35,9 @@ func main() {
 	http.HandleFunc("/expenses/add", handlers.Auth(handlers.AddExpensePage))
 	http.HandleFunc("/expenses/edit", handlers.Auth(handlers.EditExpensePage))
 	http.HandleFunc("/expenses/delete", handlers.Auth(handlers.DeleteExpensePage))
+	http.HandleFunc("/stats", handlers.Auth(handlers.StatsPage))
+	http.HandleFunc("/api/stats/by-category", handlers.Auth(handlers.CategoryStats))
+	http.HandleFunc("/api/stats/by-month", handlers.Auth(handlers.MonthStats))
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
 
 	http.ListenAndServe(":8080", nil)

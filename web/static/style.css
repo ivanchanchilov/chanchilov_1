@@ -30,3 +30,7 @@ button {
     margin-top: 15px;
     padding: 8px;
 }
+
+.chart {
+    max-width: 600px;
+}
