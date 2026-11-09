@@ -30,7 +30,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		if err != nil {
-			http.Error(w, "Ошибка базы данных", 500)
+			ServerError(w)
 			return
 		}
 		ctx := context.WithValue(r.Context(), userIDKey, userID)
@@ -42,7 +42,7 @@ func RegisterPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		t, err := template.ParseFiles("web/templates/layout.html", "web/templates/register.html")
 		if err != nil {
-			http.Error(w, "Ошибка шаблона", 500)
+			ServerError(w)
 			return
 		}
 		t.ExecuteTemplate(w, "layout", nil)
@@ -69,12 +69,12 @@ func RegisterPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != sql.ErrNoRows {
-		http.Error(w, "Ошибка базы данных", 500)
+		ServerError(w)
 		return
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "Ошибка хэширования пароля", 500)
+		ServerError(w)
 		return
 	}
 	err = Repo.CreateUser(email, string(hash))
@@ -89,7 +89,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		t, err := template.ParseFiles("web/templates/layout.html", "web/templates/login.html")
 		if err != nil {
-			http.Error(w, "Ошибка шаблона", 500)
+			ServerError(w)
 			return
 		}
 		t.ExecuteTemplate(w, "layout", nil)
@@ -111,7 +111,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
-		http.Error(w, "Ошибка базы данных", 500)
+		ServerError(w)
 		return
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(r.FormValue("password")))
@@ -122,14 +122,14 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	bytes := make([]byte, 32)
 	_, err = rand.Read(bytes)
 	if err != nil {
-		http.Error(w, "Ошибка создания сессии", 500)
+		ServerError(w)
 		return
 	}
 	sessionID := hex.EncodeToString(bytes)
 	expires := time.Now().Add(24 * time.Hour)
 	err = Repo.CreateSession(sessionID, user.ID, expires.Unix())
 	if err != nil {
-		http.Error(w, "Ошибка базы данных", 500)
+		ServerError(w)
 		return
 	}
 	http.SetCookie(w, &http.Cookie{
@@ -153,7 +153,7 @@ func LogoutPage(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		err = Repo.DeleteSession(cookie.Value)
 		if err != nil {
-			http.Error(w, "Ошибка базы данных", 500)
+			ServerError(w)
 			return
 		}
 	}

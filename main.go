@@ -25,7 +25,7 @@ func main() {
 	}
 	handlers.Repo = repo
 
-	http.HandleFunc("/", handlers.Auth(handlers.MainPage))
+	http.HandleFunc("/", handlers.MainPage)
 	http.HandleFunc("/register", handlers.RegisterPage)
 	http.HandleFunc("/login", handlers.LoginPage)
 	http.HandleFunc("/logout", handlers.Auth(handlers.LogoutPage))
@@ -38,7 +38,7 @@ func main() {
 	http.HandleFunc("/stats", handlers.Auth(handlers.StatsPage))
 	http.HandleFunc("/api/stats/by-category", handlers.Auth(handlers.CategoryStats))
 	http.HandleFunc("/api/stats/by-month", handlers.Auth(handlers.MonthStats))
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("web/static"))))
+	http.Handle("/static/", http.StripPrefix("/static/", handlers.StaticFiles()))
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", handlers.Logging(handlers.Recovery(http.DefaultServeMux)))
 }

@@ -30,7 +30,7 @@ func StatsPage(w http.ResponseWriter, r *http.Request) {
 	}
 	t, err := template.ParseFiles("web/templates/layout.html", "web/templates/stats.html")
 	if err != nil {
-		http.Error(w, "Ошибка шаблона", 500)
+		ServerError(w)
 		return
 	}
 	t.ExecuteTemplate(w, "layout", data)
@@ -46,7 +46,7 @@ func CategoryStats(w http.ResponseWriter, r *http.Request) {
 	to := r.URL.Query().Get("to")
 	stats, err := Repo.GetCategoryStats(userID, from, to)
 	if err != nil {
-		http.Error(w, "Ошибка базы данных", 500)
+		ServerError(w)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
@@ -70,7 +70,7 @@ func MonthStats(w http.ResponseWriter, r *http.Request) {
 	userID := r.Context().Value(userIDKey).(int)
 	stats, err := Repo.GetMonthStats(userID, year)
 	if err != nil {
-		http.Error(w, "Ошибка базы данных", 500)
+		ServerError(w)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")

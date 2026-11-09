@@ -16,12 +16,18 @@ type Category struct {
 }
 
 type PageData struct {
-	Expenses   []Expense
-	Expense    Expense
-	Categories []Category
-	CategoryID int
-	From       string
-	To         string
+	InvalidCategory bool
+	Error           string
+	FormAmount      string
+	FormDescription string
+	FormDate        string
+	FormCategory    string
+	Expenses        []Expense
+	Expense         Expense
+	Categories      []Category
+	CategoryID      int
+	From            string
+	To              string
 }
 
 type User struct {
