@@ -60,12 +60,12 @@ func RegisterPage(w http.ResponseWriter, r *http.Request) {
 	email := strings.ToLower(strings.TrimSpace(r.FormValue("email")))
 	password := r.FormValue("password")
 	if email == "" || password == "" || len(password) > 72 {
-		http.Error(w, "Введите email и пароль до 72 байт", 400)
+		AuthForm(w, r, "register", "Введите email и пароль длиной до 72 байт.", 400)
 		return
 	}
 	_, err = Repo.GetUser(email)
 	if err == nil {
-		http.Error(w, "Этот email уже зарегистрирован", 400)
+		AuthForm(w, r, "register", "Этот email уже зарегистрирован. Войдите в аккаунт.", 400)
 		return
 	}
 	if err != sql.ErrNoRows {
@@ -79,7 +79,7 @@ func RegisterPage(w http.ResponseWriter, r *http.Request) {
 	}
 	err = Repo.CreateUser(email, string(hash))
 	if err != nil {
-		http.Error(w, "Не удалось зарегистрироваться", 400)
+		AuthForm(w, r, "register", "Не удалось создать аккаунт. Попробуйте другой email.", 400)
 		return
 	}
 	http.Redirect(w, r, "/login", 302)
@@ -107,7 +107,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	email := strings.ToLower(strings.TrimSpace(r.FormValue("email")))
 	user, err := Repo.GetUser(email)
 	if err == sql.ErrNoRows {
-		http.Error(w, "Неверный email или пароль", 401)
+		AuthForm(w, r, "login", "Не удалось войти. Проверьте email и пароль.", 401)
 		return
 	}
 	if err != nil {
@@ -116,7 +116,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(r.FormValue("password")))
 	if err != nil {
-		http.Error(w, "Неверный email или пароль", 401)
+		AuthForm(w, r, "login", "Не удалось войти. Проверьте email и пароль.", 401)
 		return
 	}
 	bytes := make([]byte, 32)
@@ -167,4 +167,20 @@ func LogoutPage(w http.ResponseWriter, r *http.Request) {
 		Secure:   r.TLS != nil,
 	})
 	http.Redirect(w, r, "/login", 302)
+}
+
+type AuthData struct {
+	Email string
+	Error string
+}
+
+func AuthForm(w http.ResponseWriter, r *http.Request, name string, message string, status int) {
+	data := AuthData{Email: r.FormValue("email"), Error: message}
+	t, err := template.ParseFiles("web/templates/layout.html", "web/templates/"+name+".html")
+	if err != nil {
+		ServerError(w)
+		return
+	}
+	w.WriteHeader(status)
+	t.ExecuteTemplate(w, "layout", data)
 }

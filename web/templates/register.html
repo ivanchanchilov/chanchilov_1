@@ -1,10 +1,21 @@
 {{define "content"}}
-<h2>Регистрация</h2>
-<form method="POST" action="/register">
-    <label for="email">Email</label>
-    <input id="email" type="email" name="email" required>
-    <label for="password">Пароль</label>
-    <input id="password" type="password" name="password" required>
-    <button type="submit">Зарегистрироваться</button>
-</form>
+<div class="auth-view">
+    <section class="auth-story">
+        <a class="brand" href="/login">траты</a>
+        <div class="auth-message"><span class="small-note">Ваш ежедневный финансовый порядок</span><h1>Знать, куда<br>уходят деньги.</h1><p>Записывайте повседневные траты,<br>замечайте привычки и планируйте спокойнее.</p>
+        <div class="receipt"><div class="receipt-top"><span>Всё на своих местах</span><span class="receipt-check">✓</span></div><div><span>☕<span>Кофе по пути</span></span><b>250 ₽</b></div><div><span>▤<span>Продукты домой</span></span><b>1 840 ₽</b></div><div><span>↗<span>Поездка в метро</span></span><b>65 ₽</b></div><div class="receipt-bottom"><span>Маленькие записи. Полная картина.</span></div></div></div>
+        <span class="auth-footnote">Личное пространство для ваших финансов</span>
+    </section>
+    <section class="auth-form-side"><div class="auth-form-content"><h2>Начнём с простого</h2><p class="muted">Создайте аккаунт и добавьте свою первую трату.</p>
+    {{if .}}<div class="alert" role="alert">{{.Error}}</div>{{end}}
+    <form method="POST" action="/register" class="auth-form">
+        <label for="email">Электронная почта</label>
+        <input id="email" type="email" name="email" placeholder="you@example.com" autocomplete="email" {{if .}}value="{{.Email}}"{{end}} required>
+        <label for="password">Пароль</label>
+        <div class="password-field"><input id="password" type="password" name="password" placeholder="Введите пароль" autocomplete="new-password" required><button type="button" class="password-toggle" aria-label="Показать пароль" aria-pressed="false">Показать</button></div>
+        <button class="button primary full" type="submit">Создать аккаунт</button>
+    </form>
+    <p class="auth-switch">Уже есть аккаунт? <a href="/login">Войти</a></p>
+    <p class="auth-privacy">Ваши траты видны только вам.</p></div></section>
+</div>
 {{end}}

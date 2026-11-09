@@ -12,7 +12,7 @@ import (
 
 func ReadExpense(r *http.Request, categories []models.Category) (models.Expense, string) {
 	var expense models.Expense
-	amount, err := strconv.ParseFloat(r.FormValue("amount"), 64)
+	amount, err := strconv.ParseFloat(strings.ReplaceAll(r.FormValue("amount"), ",", "."), 64)
 	if err != nil || math.IsNaN(amount) || math.IsInf(amount, 0) || amount <= 0 {
 		return expense, "Сумма должна быть положительным числом."
 	}
@@ -67,6 +67,7 @@ func ExpenseForm(w http.ResponseWriter, r *http.Request, name string, expense mo
 	data.InvalidCategory = !found
 	if r.Method == "GET" && name == "add" {
 		data.FormAmount = ""
+		data.FormDate = time.Now().Format("2006-01-02")
 		data.FormCategory = "1"
 		data.InvalidCategory = false
 	}

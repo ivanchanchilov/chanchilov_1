@@ -1,5 +1,9 @@
 async function loadStats() {
     try {
+        Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+        Chart.defaults.font.size = 11;
+        Chart.defaults.color = '#89998f';
+        Chart.defaults.borderColor = '#eef2ef';
         const from = document.getElementById("from").value;
         const to = document.getElementById("to").value;
         const year = document.getElementById("year").value;
@@ -24,9 +28,12 @@ async function loadStats() {
                 datasets: [{
                     label: "Сумма трат",
                     data: totals,
-                    backgroundColor: ["#5b9bd5", "#ed7d31", "#70ad47", "#ffc000", "#9966cc"]
+                    borderWidth: 3,
+                    borderColor: "#ffffff",
+                    backgroundColor: ["#9caf9f", "#dcc8a0", "#9db6cc", "#b3a5c7", "#c9a4b6"]
                 }]
-            }
+            },
+            options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {position: "bottom", labels: {usePointStyle: true, padding: 20, boxWidth: 7}}}}
         });
 
         response = await fetch("/api/stats/by-month?year=" + encodeURIComponent(year));
@@ -45,9 +52,9 @@ async function loadStats() {
             type: "bar",
             data: {
                 labels: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-                datasets: [{label: "Сумма трат", data: monthTotals, backgroundColor: "#5b9bd5"}]
+                datasets: [{label: "Сумма трат", data: monthTotals, backgroundColor: "#7da68c", borderRadius: 4, maxBarThickness: 28}]
             },
-            options: {scales: {y: {beginAtZero: true}}}
+            options: {responsive: true, maintainAspectRatio: false, plugins: {legend: {display: false}}, scales: {x: {grid: {display: false}}, y: {beginAtZero: true, border: {display: false}}}}
         });
     } catch (error) {
         document.getElementById("stats-error").textContent = "Не удалось загрузить графики. Проверьте подключение к интернету и вход в аккаунт.";

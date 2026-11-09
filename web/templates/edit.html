@@ -1,26 +1,13 @@
 {{define "content"}}
-<h2>Редактировать трату</h2>
-{{if .Error}}<p>{{.Error}}</p>{{end}}
-<form method="POST" action="/expenses/edit?id={{.Expense.ID}}">
-    <label for="amount">Сумма</label>
-    <input id="amount" type="text" inputmode="decimal" name="amount" value="{{.FormAmount}}" required>
-
-    <label for="description">Описание</label>
-    <input id="description" type="text" name="description" value="{{.FormDescription}}" required>
-
-    <label for="date">Дата</label>
-    <input id="date" type="text" placeholder="ГГГГ-ММ-ДД" name="date" value="{{.FormDate}}" required>
-
-    <label for="category">Категория</label>
-    <select id="category" name="category" required>
-        {{if .InvalidCategory}}
-        <option value="{{.FormCategory}}" selected>Неверная категория ({{.FormCategory}})</option>
-        {{end}}
-        {{range .Categories}}
-        <option value="{{.ID}}" {{if eq (printf "%d" .ID) $.FormCategory}}selected{{end}}>{{.Name}}</option>
-        {{end}}
-    </select>
-
-    <button type="submit">Сохранить</button>
-</form>
+<a href="/expenses" class="back-link">← Все траты</a>
+<div class="page-heading"><div><h1>Редактирование траты</h1><p>Измените детали и сохраните запись.</p></div></div>
+<div class="form-layout"><section class="form-panel">
+{{if .Error}}<div class="alert" role="alert">{{.Error}}</div>{{end}}
+<form method="POST" action="/expenses/edit?id={{.Expense.ID}}" class="expense-form">
+    <div class="amount-field"><label for="amount">Сумма траты</label><div class="amount-input"><input id="amount" type="text" inputmode="decimal" name="amount" placeholder="0.00" value="{{.FormAmount}}" required><span>₽</span></div></div>
+    <div class="field"><label for="description">На что потратили</label><input id="description" type="text" name="description" placeholder="Например, продукты на неделю" value="{{.FormDescription}}" required></div>
+    <div class="form-row"><div class="field"><label for="category">Категория</label><select id="category" name="category" required>{{if .InvalidCategory}}<option value="{{.FormCategory}}" selected>Выберите категорию</option>{{end}}{{range .Categories}}<option value="{{.ID}}" {{if eq (printf "%d" .ID) $.FormCategory}}selected{{end}}>{{.Name}}</option>{{end}}</select></div>
+    <div class="field"><label for="date">Дата</label><input id="date" type="{{if .Error}}text{{else}}date{{end}}" placeholder="ГГГГ-ММ-ДД" name="date" value="{{.FormDate}}" required></div></div>
+    <div class="form-actions"><button class="button primary" type="submit">Сохранить изменения</button><a class="button ghost" href="/expenses">Отмена</a></div>
+</form></section><aside class="form-tip"><span class="tip-mark">✳</span><h3>Детали помогают<br>видеть привычки</h3><p>Короткое описание и подходящая категория помогут разобраться, на что уходит больше всего.</p><a href="/stats">Посмотреть статистику</a></aside></div>
 {{end}}

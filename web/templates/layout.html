@@ -3,26 +3,40 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Учёт личных трат</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#24685b">
+    <title>Траты — личные финансы</title>
+    <link rel="stylesheet" href="/static/style.css?v=design2">
+    <script src="/static/ui.js?v=design2" defer></script>
 </head>
 <body>
-    <header>
-        <h1>Учёт личных трат</h1>
-        <nav>
-            <a href="/expenses">Список трат</a>
-            <a href="/expenses/add">Добавить трату</a>
-            <a href="/stats">Статистика</a>
-            <a href="/register">Регистрация</a>
-            <a href="/login">Вход</a>
-            <form method="POST" action="/logout">
-                <button type="submit">Выйти</button>
-            </form>
-            <a href="/about">О проекте</a>
+    <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <symbol id="i-list" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h4"/></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16M9 15v-4M14 15V7M19 15v-6"/></symbol>
+        <symbol id="i-edit" viewBox="0 0 24 24"><path d="m15 5 4 4M4 20l5-1L20 8a2.8 2.8 0 0 0-4-4L5 15l-1 5Z"/></symbol>
+        <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v5M14 11v5"/></symbol>
+        <symbol id="i-exit" viewBox="0 0 24 24"><path d="M9 4H5v16h4M13 8l4 4-4 4M9 12h12"/></symbol>
+        <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 7h16M7 12h10M10 17h4"/></symbol>
+    </svg>
+    <a class="skip-link" href="#main">К содержимому</a>
+    <aside class="sidebar">
+        <a class="brand" href="/expenses">траты</a>
+        <div class="workspace-label">Личные финансы</div>
+        <nav class="main-nav" aria-label="Основная навигация">
+            <a href="/expenses"><svg class="icon"><use href="#i-list"/></svg>Все траты</a>
+            <a href="/stats"><svg class="icon"><use href="#i-chart"/></svg>Статистика</a>
+            <a href="/expenses/add"><svg class="icon"><use href="#i-plus"/></svg>Добавить трату</a>
         </nav>
-    </header>
-    <main>
+        <div class="sidebar-bottom">
+            <div class="account"><span class="avatar">Я</span><div>Личный аккаунт</div></div>
+            <div class="sidebar-links"><a href="/about">О проекте</a><form method="POST" action="/logout"><button class="logout" type="submit"><svg class="icon"><use href="#i-exit"/></svg>Выйти</button></form></div>
+        </div>
+    </aside>
+    <main id="main" class="main-content">
+        <div class="topbar"><span id="today" style="margin-left:auto"></span></div>
         {{template "content" .}}
+        <footer class="page-footer">Траты<span>Больше ясности в повседневных расходах</span></footer>
     </main>
 </body>
 </html>

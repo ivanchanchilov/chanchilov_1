@@ -1,8 +1,3 @@
 {{define "content"}}
-<h2>Удалить трату</h2>
-<p>Удалить трату «{{.Description}}» на сумму {{.Amount}} за {{.Date}}?</p>
-<form method="POST" action="/expenses/delete?id={{.ID}}">
-    <button type="submit">Да, удалить</button>
-</form>
-<a href="/expenses">Отмена</a>
+<a class="back-link" href="/expenses">← Все траты</a><section class="confirm-panel"><span class="delete-icon"><svg class="icon"><use href="#i-trash"/></svg></span><h1>Удалить эту трату?</h1><p class="muted">Запись исчезнет из списка и статистики. Отменить удаление не получится.</p><div class="delete-detail"><strong>{{.Description}}</strong><span data-money="{{.Amount}}">{{.Amount}} ₽</span><small data-date="{{.Date}}">{{.Date}}</small></div><form method="POST" action="/expenses/delete?id={{.ID}}" class="form-actions"><button class="button danger" type="submit">Удалить трату</button><a class="button secondary" href="/expenses">Оставить запись</a></form></section>
 {{end}}

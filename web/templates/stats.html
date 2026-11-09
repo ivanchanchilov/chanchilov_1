@@ -1,27 +1,8 @@
 {{define "content"}}
-<h2>Статистика</h2>
-<form method="GET" action="/stats">
-    <h3>Период для категорий</h3>
-    <label for="from">От</label>
-    <input id="from" type="date" name="from" value="{{.From}}">
-    <label for="to">До</label>
-    <input id="to" type="date" name="to" value="{{.To}}">
-    <h3>Год для статистики по месяцам</h3>
-    <label for="year">Год</label>
-    <input id="year" type="number" name="year" min="1" max="9999" value="{{.Year}}" required>
-    <button type="submit">Показать</button>
-</form>
-<p id="stats-error"></p>
-<h3>Траты по категориям</h3>
-<p id="category-empty"></p>
-<div class="chart">
-    <canvas id="category-chart"></canvas>
-</div>
-<h3>Траты по месяцам</h3>
-<p id="month-empty"></p>
-<div class="chart">
-    <canvas id="month-chart"></canvas>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-<script src="/static/stats.js"></script>
+<div class="page-heading"><div><h1>Статистика</h1><p>Посмотрите, из чего складываются ваши расходы.</p></div><a class="button secondary" href="/expenses">К списку трат</a></div>
+<section class="stats-filters"><form method="GET" action="/stats" class="filter-bar"><div class="field"><label for="from">Категории: с даты</label><input id="from" type="date" name="from" value="{{.From}}"></div><div class="field"><label for="to">По дату</label><input id="to" type="date" name="to" value="{{.To}}"></div><div class="field"><label for="year">По месяцам: год</label><input id="year" type="number" name="year" min="1" max="9999" value="{{.Year}}" required></div><button class="button secondary" type="submit">Применить</button></form></section>
+<p id="stats-error" role="status"></p>
+<div class="charts-grid"><section class="chart-panel"><div class="chart-heading"><h2>По категориям</h2><p>Как распределились расходы</p></div><p id="category-empty" class="muted"></p><div class="chart category-chart"><canvas id="category-chart" aria-label="Круговая диаграмма расходов по категориям" role="img"></canvas></div></section>
+<section class="chart-panel"><div class="chart-heading"><h2>По месяцам</h2><p>Динамика расходов за {{.Year}} год</p></div><p id="month-empty" class="muted"></p><div class="chart"><canvas id="month-chart" aria-label="Диаграмма расходов по месяцам" role="img"></canvas></div></section></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script><script src="/static/stats.js"></script>
 {{end}}
